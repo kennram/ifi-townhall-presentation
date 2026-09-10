@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IFI Autumn Festival Season 2026</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Instrument+Serif:ital@0;1&family=Inter:wght@400;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="styles.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+<body>
+  <div id="canvas-container"></div>
+  <div class="vignette"></div>
+  <div id="bts-wall" class="bts-wall"></div>
+
+  <div class="overlay">
+    <!-- Slide 1: Hero Opener -->
+    <div class="slide active">
+      <h1 id="hero-title" class="hero-grow-title">FESTIVAL SEASON IS HERE</h1>
+      <div class="click-prompt">[ CLICK ANYWHERE TO ENTER ]</div>
+    </div>
+
+    <!-- Slide 2: Festival Poster Grid -->
+    <div class="slide">
+      <div class="badge">Autumn Season 2026</div>
+      <div class="poster-grid">
+        <div class="cinema-poster" id="poster-0">
+          <img class="poster-bg-img" src="https://images.unsplash.com/photo-1485846234645-a62644f84728?auto=format&fit=crop&w=800&q=80" alt="Documentary Texture" />
+          <div class="poster-month" style="color:#ffffff;">SEPTEMBER</div>
+          <div class="poster-title" style="color:#ffffff;">IFI DOCUMENTARY FESTIVAL</div>
+          <div class="poster-footer" style="color:#ffffff;">REAL STORIES</div>
+        </div>
+        <div class="cinema-poster" id="poster-1">
+          <img class="poster-bg-img" src="https://images.unsplash.com/photo-1509248961158-e54f6934749c?auto=format&fit=crop&w=800&q=80" alt="Horror Candlelit Texture" />
+          <div class="poster-month" style="color:#ff2a55;">OCTOBER</div>
+          <div class="poster-title" style="color:#ff2a55;">IFI HORRORTHON</div>
+          <div class="poster-footer" style="color:#ff2a55;">DESCENT INTO DARKNESS</div>
+        </div>
+        <div class="cinema-poster" id="poster-2">
+          <img class="poster-bg-img" src="https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=800&q=80" alt="French Cinema Texture" />
+          <div class="poster-month" style="color:#facc15;">NOVEMBER</div>
+          <div class="poster-title" style="color:#facc15;">PEUGEOT IFI FRENCH FILM FEST</div>
+          <div class="poster-footer" style="color:#facc15;">10 DAYS OF CULTURE</div>
+        </div>
+        <div class="cinema-poster" id="poster-3">
+          <img class="poster-bg-img" src="https://images.unsplash.com/photo-1517411032315-54ef2cb783bb?auto=format&fit=crop&w=800&q=80" alt="Kinopolis Texture" />
+          <div class="poster-month" style="color:#38bdf8;">DECEMBER</div>
+          <div class="poster-title" style="color:#38bdf8;">IFI KINOPOLIS</div>
+          <div class="poster-footer" style="color:#38bdf8;">POLISH CINEMA</div>
+        </div>
+      </div>
+      <p class="slide2-tagline" id="slide2-tagline">
+        FOUR FESTIVALS. FOUR VERY DIFFERENT AUDIENCES. ONE VERY BUSY AUTUMN.
+      </p>
+    </div>
+
+    <!-- Slide 3: Why Festivals Matter -->
+    <div class="slide">
+      <div class="badge">Purpose &amp; Impact</div>
+      <h1 class="interactive-title" id="magnetic-title">WHY FESTIVALS MATTER TO IFI</h1>
+      
+      <div class="building-stage" id="building-stage">
+        <img class="building-seats-img" src="https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?auto=format&fit=crop&w=1600&q=80" alt="Cinema Seats" />
+        <div class="building-light-beam" id="light-beam"></div>
+      </div>
+
+      <div class="metrics-grid">
+        <div class="metric-card" id="metric-0">
+          <h3>AUDIENCE</h3>
+          <p>Bringing people through the doors</p>
+        </div>
+        <div class="metric-card" id="metric-1">
+          <h3>IDENTITY</h3>
+          <p>Showing what makes IFI distinctive</p>
+        </div>
+        <div class="metric-card" id="metric-2">
+          <h3>COMMUNITY / DIVERSITY</h3>
+          <p>Filmmakers, audiences, partners, members, students, enthusiasts, etc.</p>
+        </div>
+      </div>
+
+      <div class="slide3-master-quote" id="slide3-quote">
+        FESTIVALS AREN'T JUST BLOCKS OF PROGRAMMING; THEY CHANGE THE ATMOSPHERE OF THE BUILDING.
+      </div>
+    </div>
+
+    <!-- Slide 4: Documentary Festival -->
+    <div class="slide">
+      <div class="super8-layout">
+        <div class="super8-header">
+          <div class="badge" style="border-color:#f59e0b; color:#f59e0b; margin:0;">September 2026</div>
+          <div class="super8-reel-hud">
+            <div class="reel-icon"></div>
+            <span style="font-family:'Space Mono', monospace; font-size:0.8rem; font-weight:700; color:#fff;">SUPER 8 &bull; 18 FPS</span>
+          </div>
+        </div>
+        <h1 class="super8-title-style">IFI DOCUMENTARY FESTIVAL</h1>
+        <div class="super8-tagline" id="doc-tagline">REAL STORIES. BIG IDEAS.</div>
+        <div class="filmstrip-row">
+          <div class="film-frame-card" id="doc-pillar-0"><span class="film-frame-num">[ REEL 01 ]</span><div class="film-frame-text">GLOBAL &amp; IRISH PERSPECTIVES</div></div>
+          <div class="film-frame-card" id="doc-pillar-1"><span class="film-frame-num">[ REEL 02 ]</span><div class="film-frame-text">SPARKING CONVERSATION &amp; Q&amp;As</div></div>
+          <div class="film-frame-card" id="doc-pillar-2"><span class="film-frame-num">[ REEL 03 ]</span><div class="film-frame-text">FILMMAKER ENGAGEMENT</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 5: Horrorthon Split -->
+    <div class="slide">
+      <div class="horror-split-layout">
+        <div>
+          <div class="badge" style="border-color:#ff2a55; color:#ff2a55;">October 2026</div>
+          <h1 class="horror-hero-title">IFI HORRORTHON</h1>
+          <div class="horror-slash-line"></div>
+          <div class="horror-sub-tagline" id="horror-sub">THE IFI’S ANNUAL DESCENT INTO DARKNESS</div>
+        </div>
+        <div class="horror-stack-cards">
+          <div class="horror-detail-card" id="horror-item-0">Adventurous programming, dedicated audiences, and a full-venue festival experience.</div>
+          <div class="horror-detail-card" id="horror-item-1">One of the most distinctive events in the Irish cinema calendar.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 6: Horrorthon Gallery -->
+    <div class="slide">
+      <div class="badge" style="border-color:#ff2a55; color:#ff2a55;">Horrorthon Evolves</div>
+      <h1 class="horror-hero-title" style="font-size:clamp(2.8rem, 4.8vw, 4.2rem); margin-bottom:1rem; white-space:normal;">SATURDAY NIGHT TAKEOVER</h1>
+      <div class="horror-photo-grid">
+        <div class="horror-photo-card" id="horror-card-0">
+          <img class="horror-photo-img" src="https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=1200&q=80" alt="Party" />
+          <div class="horror-photo-caption">VENUE TAKEOVER &amp; PARTY</div>
+        </div>
+        <div class="horror-photo-card" id="horror-card-1">
+          <img class="horror-photo-img" src="https://images.unsplash.com/photo-1509248961158-e54f6934749c?auto=format&fit=crop&w=1200&q=80" alt="Quiz" />
+          <div class="horror-photo-caption">ANNUAL TABLE QUIZ</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 7: French Film Fest -->
+    <div class="slide">
+      <div class="french-editorial-layout">
+        <div>
+          <div class="badge" style="border-color:#facc15; color:#facc15;">November 2026</div>
+          <h1 class="french-hero-text">PEUGEOT IFI<br/>FRENCH FILM FESTIVAL</h1>
+          <div class="french-gold-tagline" id="french-tagline">FOR 10 DAYS, THE IFI BECOMES THE CENTRE OF FRENCH CULTURE IN IRELAND</div>
+        </div>
+        <div class="french-editorial-grid">
+          <div class="french-pillar-card" id="french-p-0"><span class="french-pillar-num">01 / GUESTS</span><div class="french-pillar-title">Major international guests / filmmakers</div></div>
+          <div class="french-pillar-card" id="french-p-1"><span class="french-pillar-num">02 / PARTNERS</span><div class="french-pillar-title">Strong industry &amp; cultural partnerships</div></div>
+          <div class="french-pillar-card" id="french-p-2"><span class="french-pillar-num">03 / PRESS</span><div class="french-pillar-title">Press and media attention</div></div>
+          <div class="french-pillar-card" id="french-p-3"><span class="french-pillar-num">04 / AUDIENCE</span><div class="french-pillar-title">High audience demand &amp; full venue drive (All Departments)</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 8: Kinopolis -->
+    <div class="slide">
+      <div class="kino-brutalist-layout">
+        <div class="badge" style="border-color:#38bdf8; color:#38bdf8;">December 2026</div>
+        <h1 class="kino-title">IFI KINOPOLIS</h1>
+        <div class="kino-sub-tagline" id="kino-sub">THE AUTUMN CHANGE OF PACE</div>
+        <div class="kino-grid-row">
+          <div class="kino-detail-card" id="kino-item-0">A weekend dedicated to celebrating the best of new Polish cinema.</div>
+          <div class="kino-detail-card" id="kino-item-1">Featuring fresh talent, acclaimed auteurs, and timeless Polish classics.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 9: The Audience Sees -->
+    <div class="slide">
+      <div class="badge">The Front of House</div>
+      <div class="audience-screen-stage">
+        <h1 class="audience-title">THE AUDIENCE SEES…</h1>
+        <div class="audience-reveal-grid">
+          <div class="audience-card" id="audience-0">A SCREENING</div>
+          <div class="audience-card" id="audience-1">A GREAT FILM</div>
+          <div class="audience-card" id="audience-2">A PACKED CINEMA</div>
+          <div class="audience-card" id="audience-3">A LIVE Q&amp;A</div>
+        </div>
+        <div style="position:relative; z-index:4; font-family:monospace; font-size:0.85rem; color:rgba(255,255,255,0.7); letter-spacing:3px;">[ FRONT OF HOUSE EXPERIENCE ]</div>
+      </div>
+    </div>
+
+    <!-- Slide 10: Behind The Scenes Department Burst -->
+    <div class="slide">
+      <div class="bts-header-stage">
+        <h1 class="bts-header-title">BEHIND THE SCENES OF FESTIVAL SEASON…</h1>
+      </div>
+    </div>
+
+    <!-- Slide 11: What Success Looks Like -->
+    <div class="slide">
+      <div class="badge" style="border-color:#22c55e; color:#4ade80;">The Goal</div>
+      <div class="success-stage">
+        <h1 class="success-title">WHAT DOES SUCCESS LOOK LIKE?</h1>
+        <div class="success-grid">
+          <div class="success-card" id="success-card-0"><h3>FULL CINEMAS</h3></div>
+          <div class="success-card" id="success-card-1"><h3>HAPPY AUDIENCES</h3></div>
+          <div class="success-card" id="success-card-2"><h3>GREAT CONVERSATIONS</h3></div>
+          <div class="success-card" id="success-card-3"><h3>NEW AUDIENCES</h3></div>
+          <div class="success-card" id="success-card-4"><h3>A GREAT IFI EXPERIENCE</h3><p>(Smooth online booking to venue exit)</p></div>
+        </div>
+        <div class="success-master-goal" id="success-master">THE GOAL ISN'T SIMPLY TO HAVE SUCCESSFUL FESTIVALS. IT'S TO MAKE PEOPLE WANT TO COME BACK TO THE IFI.</div>
+      </div>
+    </div>
+
+    <!-- Slide 12: Final Wrap-up -->
+    <div class="slide">
+      <div class="badge">Closing</div>
+      <div class="final-wrap-stage">
+        <h1 class="final-title">HERE WE GO…</h1>
+        <div class="final-timeline-grid">
+          <div class="final-timeline-card" id="final-card-0"><div class="final-month">SEPTEMBER</div><div class="final-fest-name">Documentary</div></div>
+          <div class="final-timeline-card" id="final-card-1"><div class="final-month" style="color:#ff2a55;">OCTOBER</div><div class="final-fest-name" style="color:#ff2a55;">Horrorthon</div></div>
+          <div class="final-timeline-card" id="final-card-2"><div class="final-month" style="color:#facc15;">NOVEMBER</div><div class="final-fest-name" style="color:#facc15;">French Film Fest</div></div>
+          <div class="final-timeline-card" id="final-card-3"><div class="final-month" style="color:#38bdf8;">DECEMBER</div><div class="final-fest-name" style="color:#38bdf8;">Kinopolis</div></div>
+        </div>
+        <div class="final-summary-card" id="final-summary">Four festivals. Thousands of audience members. Countless coffees. One very busy autumn.</div>
+        <div class="final-thankyou-banner" id="final-thankyou">THANK YOU &mdash; AND SEE YOU IN THE CINEMA.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="nav-controls">
+    <button class="btn" onclick="prevSlide()">&#8592; Prev</button>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

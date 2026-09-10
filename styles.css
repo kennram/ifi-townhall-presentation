@@ -1,0 +1,331 @@
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background-color: #000; color: #fff; font-family: 'Inter', sans-serif; overflow: hidden; height: 100vh; }
+
+#canvas-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
+.vignette { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 2; pointer-events: none; background: radial-gradient(circle, transparent 25%, rgba(0,0,0,0.98) 100%); }
+
+/* BTS Wall Layer */
+.bts-wall { position: absolute; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 3; perspective: 1000px; }
+.dept-tag { position: absolute; font-family: 'Inter', sans-serif; font-weight: 800; font-size: clamp(0.75rem, 1.2vw, 1.25rem); letter-spacing: 1.5px; text-transform: uppercase; padding: 0.6rem 1.4rem; border-radius: 50px; background: rgba(12, 16, 24, 0.88); border: 1.5px solid rgba(255, 255, 255, 0.35); backdrop-filter: blur(15px); box-shadow: 0 15px 35px rgba(0,0,0,0.9); opacity: 0; transform: scale(2.2) translateY(50px); transition: all 1s cubic-bezier(0.19, 1, 0.22, 1); white-space: nowrap; text-shadow: 0 2px 8px #000; }
+.dept-tag.landed { opacity: 1; transform: scale(1) translateY(0); }
+
+/* Overlay UI Container */
+.overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 4; pointer-events: none; display: flex; justify-content: center; align-items: center; text-align: center; padding: clamp(1rem, 3vw, 2.5rem); }
+.slide { display: none; opacity: 0; transform: scale(0.95); transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1); width: 100%; max-width: 1400px; margin: 0 auto; max-height: 100vh; overflow-y: auto; scrollbar-width: none; }
+.slide::-webkit-scrollbar { display: none; }
+.slide.active { display: flex; flex-direction: column; justify-content: center; align-items: center; opacity: 1; transform: scale(1); pointer-events: auto; height: 100%; }
+
+/* Slide 1 Hero Opener */
+.hero-grow-title { 
+  font-family: 'Cinzel', serif; 
+  font-size: clamp(2.5rem, 7vw, 7.5rem); 
+  font-weight: 900; 
+  letter-spacing: -1px; 
+  text-transform: uppercase; 
+  line-height: 0.95; 
+  width: 100%; 
+  text-align: center;
+  margin: 0 auto; 
+  opacity: 0; 
+  transform: scale(0.08); 
+  transition: transform 2.8s cubic-bezier(0.16, 1, 0.3, 1), opacity 1.5s ease-out; 
+  cursor: pointer;
+  text-shadow: 0 10px 40px rgba(0,0,0,0.95);
+}
+.slide.active .hero-grow-title { opacity: 1; transform: scale(1); }
+.hero-grow-title.pulse-beat { animation: subtleFestivalPulse 4.8s infinite ease-in-out; }
+
+.click-prompt {
+  font-family: 'Space Mono', monospace;
+  font-size: clamp(0.75rem, 1.1vw, 1.05rem);
+  letter-spacing: 3px;
+  color: #ffffff;
+  text-shadow: 0 2px 10px #000;
+  margin-top: clamp(1.2rem, 3vh, 2.5rem);
+  text-transform: uppercase;
+  animation: pulsePrompt 2s infinite ease-in-out;
+}
+@keyframes pulsePrompt { 0%, 100% { opacity: 0.4; } 50% { opacity: 0.95; } }
+
+@keyframes subtleFestivalPulse {
+  0% { transform: scale(1); text-shadow: 0 0 30px rgba(255, 255, 255, 0.5), 0 4px 20px #000; color: #ffffff; }
+  25% { transform: scale(1.025); text-shadow: 0 0 45px rgba(255, 42, 85, 0.8), 0 4px 20px #000; color: #ff2a55; }
+  50% { transform: scale(1); text-shadow: 0 0 45px rgba(250, 204, 21, 0.8), 0 4px 20px #000; color: #facc15; }
+  75% { transform: scale(1.025); text-shadow: 0 0 45px rgba(56, 189, 248, 0.8), 0 4px 20px #000; color: #38bdf8; }
+  100% { transform: scale(1); text-shadow: 0 0 30px rgba(255, 255, 255, 0.5), 0 4px 20px #000; color: #ffffff; }
+}
+
+/* Slide 2 Poster Grid */
+.poster-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: clamp(0.8rem, 1.5vw, 1.8rem); width: 100%; margin-top: 0.8rem; perspective: 1200px; }
+.cinema-poster { 
+  aspect-ratio: 2 / 3; 
+  background: linear-gradient(145deg, rgba(20,20,25,0.95), rgba(5,5,8,0.99)); 
+  border: 2px solid rgba(255, 255, 255, 0.25); 
+  border-radius: 16px; 
+  padding: clamp(1rem, 1.5vw, 2rem) clamp(0.8rem, 1.2vw, 1.5rem); 
+  display: flex; 
+  flex-direction: column; 
+  text-align: left; 
+  backdrop-filter: blur(25px); 
+  opacity: 0; 
+  transform: translateY(120px) rotateY(-35deg) scale(0.75); 
+  transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+  box-shadow: 0 25px 60px rgba(0,0,0,0.95); 
+  position: relative; 
+  overflow: hidden; 
+  pointer-events: none;
+}
+.cinema-poster.revealed { opacity: 1; transform: translateY(0) rotateY(0deg) scale(1); pointer-events: auto; }
+
+.cinema-poster:nth-child(1) { border-color: rgba(255,255,255,0.5); }
+.cinema-poster:nth-child(2) { border-color: rgba(255,42,85,0.6); }
+.cinema-poster:nth-child(3) { border-color: rgba(250,204,21,0.6); }
+.cinema-poster:nth-child(4) { border-color: rgba(56,189,248,0.6); }
+
+.poster-bg-img {
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  object-fit: cover; opacity: 0.65; mix-blend-mode: soft-light;
+  pointer-events: none; transition: transform 0.8s ease, opacity 0.5s ease;
+  filter: contrast(1.4) brightness(0.85); z-index: 1;
+}
+.cinema-poster:hover .poster-bg-img { transform: scale(1.08); opacity: 0.85; filter: contrast(1.5) brightness(1); }
+
+.poster-month { 
+  font-family: 'Space Mono', monospace; font-size: clamp(0.7rem, 0.9vw, 1rem); 
+  font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #ffffff; 
+  border-bottom: 2px solid rgba(255,255,255,0.25); padding-bottom: 0.5rem; 
+  margin-bottom: auto; position: relative; z-index: 2; text-shadow: 0 2px 10px #000;
+}
+.poster-title { 
+  font-family: 'Cinzel', serif; font-size: clamp(1rem, 1.4vw, 1.75rem); 
+  font-weight: 900; text-transform: uppercase; line-height: 1.05; 
+  margin-top: auto; margin-bottom: 0.5rem; word-break: normal; position: relative; z-index: 2; text-shadow: 0 4px 20px #000, 0 0 10px #000;
+}
+.poster-footer { 
+  font-family: 'Space Mono', monospace; font-size: clamp(0.6rem, 0.75vw, 0.85rem); 
+  font-weight: 700; letter-spacing: 1px; text-transform: uppercase; opacity: 0.95; 
+  position: relative; z-index: 2; text-shadow: 0 2px 10px #000;
+}
+
+.slide2-tagline { margin-top: 1.2rem; font-weight: 800; color: #fff; text-shadow: 0 0 30px rgba(255,255,255,0.7), 0 4px 15px #000; font-size: clamp(0.9rem, 1.4vw, 1.5rem); opacity: 0; transform: translateY(20px); transition: all 0.8s ease; }
+.slide2-tagline.revealed { opacity: 1; transform: translateY(0); }
+
+/* Slide 3 Magnetic Title & Building Stage */
+.interactive-title { font-family: 'Cinzel', serif; font-size: clamp(1.4rem, 2.8vw, 3rem); font-weight: 900; letter-spacing: -1px; text-transform: uppercase; line-height: 1.15; display: block; width: 100%; max-width: 1250px; margin: 0 auto; cursor: default; word-wrap: break-word; hyphens: none; text-shadow: 0 4px 20px #000; }
+.nowrap-phrase { white-space: nowrap; display: inline-block; }
+.magnetic-char { display: inline-block; transition: transform 0.15s ease-out, color 0.3s ease; }
+.magnetic-char:hover { transform: translateY(-12px) scale(1.3) rotate(5deg); color: #38bdf8; text-shadow: 0 0 25px #38bdf8, 0 4px 10px #000; }
+
+.building-stage { 
+  width: 100%; height: clamp(140px, 22vh, 250px); margin: 1rem 0; 
+  border-radius: 20px; border: 2px solid rgba(255,255,255,0.3); position: relative; 
+  overflow: hidden; display: flex; justify-content: center; align-items: center; 
+  box-shadow: 0 20px 60px rgba(0,0,0,0.95); background: #000;
+}
+.building-seats-img { 
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.65; 
+  filter: contrast(1.3) brightness(0.75) saturate(0.85); transition: transform 0.5s ease, filter 0.5s ease;
+}
+.building-stage:hover .building-seats-img { transform: scale(1.02); filter: contrast(1.35) brightness(0.85) saturate(1); }
+.building-light-beam { 
+  position: absolute; width: 440px; height: 440px; border-radius: 50%; 
+  background: radial-gradient(circle, rgba(255, 42, 85, 0.65) 0%, rgba(250, 204, 21, 0.45) 40%, transparent 70%); 
+  pointer-events: none; transform: translate(-50%, -50%); mix-blend-mode: screen; z-index: 2; 
+}
+
+.metrics-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(0.6rem, 1.2vw, 1.4rem); width: 100%; margin-bottom: 1rem; }
+.metric-card { 
+  background: rgba(15, 15, 20, 0.85); border: 1.5px solid rgba(255, 255, 255, 0.25); 
+  padding: clamp(0.8rem, 1.4vw, 1.5rem); border-radius: 16px; backdrop-filter: blur(20px); 
+  opacity: 0; transform: translateY(30px); transition: all 0.6s ease; text-align: left; box-shadow: 0 15px 35px rgba(0,0,0,0.8);
+}
+.metric-card.revealed { opacity: 1; transform: translateY(0); }
+.metric-card h3 { 
+  font-family: 'Cinzel', serif; font-size: clamp(1rem, 1.4vw, 1.6rem); font-weight: 900; 
+  color: #38bdf8; margin-bottom: 0.2rem; letter-spacing: 1px; text-shadow: 0 0 15px rgba(56, 189, 248, 0.5), 0 2px 8px #000;
+}
+.metric-card p { font-size: clamp(0.8rem, 1vw, 1.05rem); color: #ffffff; line-height: 1.35; font-weight: 600; text-shadow: 0 2px 8px #000; }
+
+.slide3-master-quote {
+  background: rgba(20, 25, 35, 0.92); border: 2px solid rgba(56, 189, 248, 0.6); 
+  padding: clamp(0.6rem, 1.2vw, 1.1rem) clamp(1rem, 2vw, 2.2rem); border-radius: 50px; 
+  font-size: clamp(0.75rem, 1.1vw, 1.25rem); font-weight: 800; letter-spacing: 1px; color: #ffffff; 
+  text-shadow: 0 0 25px rgba(56, 189, 248, 0.7), 0 2px 10px #000; opacity: 0; transform: translateY(20px); 
+  transition: all 0.8s ease; backdrop-filter: blur(20px); box-shadow: 0 15px 45px rgba(56, 189, 248, 0.25), 0 15px 30px rgba(0,0,0,0.9); width: 100%;
+}
+.slide3-master-quote.revealed { opacity: 1; transform: translateY(0); }
+
+/* Slide 4 Super 8 Filmstrip */
+.super8-layout { width: 100%; max-width: 1250px; display: flex; flex-direction: column; align-items: center; gap: 1rem; }
+.super8-header { width: 100%; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid rgba(245, 158, 11, 0.4); padding-bottom: 0.6rem; }
+.super8-title-style { font-family: 'Space Mono', monospace; font-size: clamp(1.6rem, 3.8vw, 3.8rem); font-weight: 700; color: #fff; text-transform: uppercase; letter-spacing: -1px; text-shadow: 0 0 35px rgba(245, 158, 11, 0.5), 0 4px 20px #000; line-height: 1; }
+.super8-reel-hud { display: flex; align-items: center; gap: 0.6rem; background: rgba(20, 15, 5, 0.9); padding: 0.4rem 1rem; border-radius: 40px; border: 1.5px solid rgba(245, 158, 11, 0.5); backdrop-filter: blur(10px); }
+.reel-icon { width: 16px; height: 18px; border: 3px solid #f59e0b; border-radius: 50%; border-top-color: transparent; animation: spinReel 0.8s linear infinite; }
+@keyframes spinReel { to { transform: rotate(360deg); } }
+
+.filmstrip-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(0.6rem, 1.2vw, 1.6rem); width: 100%; margin-top: 0.6rem; }
+.film-frame-card { background: rgba(18, 14, 6, 0.92); border-top: 8px solid #111; border-bottom: 8px solid #111; border-left: 2px dashed rgba(245, 158, 11, 0.5); border-right: 2px dashed rgba(245, 158, 11, 0.5); border-radius: 8px; padding: clamp(1rem, 1.5vw, 2rem) clamp(0.8rem, 1.2vw, 1.4rem); text-align: left; opacity: 0; transform: translateY(30px); transition: all 0.6s ease; backdrop-filter: blur(15px); box-shadow: 0 15px 40px rgba(0,0,0,0.9); }
+.film-frame-card.revealed { opacity: 1; transform: translateY(0); }
+.film-frame-num { font-family: 'Space Mono', monospace; font-size: 0.75rem; color: #f59e0b; margin-bottom: 0.4rem; display: block; letter-spacing: 2px; text-shadow: 0 2px 8px #000; }
+.film-frame-text { font-size: clamp(0.85rem, 1.1vw, 1.2rem); font-weight: 800; letter-spacing: 1px; color: #fff; text-transform: uppercase; line-height: 1.3; word-break: break-word; text-shadow: 0 2px 10px #000; }
+
+.super8-tagline { font-family: 'Space Mono', monospace; font-size: clamp(1rem, 2vw, 2.2rem); font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #f59e0b; opacity: 0; transform: scale(0.9); transition: all 0.6s ease; margin-top: 0.5rem; text-shadow: 0 0 25px rgba(245, 158, 11, 0.6), 0 4px 15px #000; }
+.super8-tagline.revealed { opacity: 1; transform: scale(1); }
+
+/* Slide 5 Horror Slasher Split-Screen */
+.horror-split-layout { width: 100%; max-width: 1250px; display: grid; grid-template-columns: 1.3fr 0.7fr; gap: clamp(1rem, 2vw, 2rem); align-items: center; text-align: left; }
+.horror-hero-title { 
+  font-family: 'Cinzel', serif; font-size: clamp(2rem, 4.5vw, 5.2rem); font-weight: 900; 
+  letter-spacing: -1px; text-transform: uppercase; color: #ff2a55; 
+  text-shadow: 0 0 35px #ff2a55, 0 0 70px rgba(255, 42, 85, 0.8), 0 4px 20px #000; 
+  animation: horrorFlicker 3s infinite alternate; line-height: 0.95; white-space: nowrap; 
+}
+@keyframes horrorFlicker { 0%, 100% { opacity: 1; text-shadow: 0 0 35px #ff2a55, 0 0 70px rgba(255, 42, 85, 0.8), 0 4px 20px #000; } 92% { opacity: 1; } 93% { opacity: 0.4; text-shadow: none; } 94% { opacity: 1; } 96% { opacity: 0.2; } 97% { opacity: 1; } }
+.horror-sub-tagline { font-size: clamp(0.95rem, 1.8vw, 1.75rem); font-weight: 900; letter-spacing: 1.5px; text-transform: uppercase; color: #fff; text-shadow: 0 0 30px rgba(255, 42, 85, 0.9), 0 4px 15px #000; opacity: 0; transform: translateY(20px); transition: all 0.7s ease; margin-top: 0.6rem; }
+.horror-sub-tagline.revealed { opacity: 1; transform: translateY(0); }
+
+.horror-slash-line { width: 100%; height: 3px; background: linear-gradient(90deg, #ff2a55, transparent); margin: 0.8rem 0; box-shadow: 0 0 15px #ff2a55; }
+.horror-stack-cards { display: flex; flex-direction: column; gap: 0.8rem; }
+.horror-detail-card { background: rgba(25, 0, 5, 0.92); border-left: 5px solid #ff2a55; border-top: 1px solid rgba(255, 42, 85, 0.3); border-bottom: 1px solid rgba(255, 42, 85, 0.3); border-right: 1px solid rgba(255, 42, 85, 0.3); padding: clamp(0.8rem, 1.2vw, 1.5rem) clamp(1rem, 1.5vw, 2rem); border-radius: 0 16px 16px 0; font-size: clamp(0.85rem, 1.05vw, 1.15rem); font-weight: 700; letter-spacing: 0.5px; color: #ffffff; opacity: 0; transform: translateX(30px); transition: all 0.6s ease; backdrop-filter: blur(15px); line-height: 1.4; text-shadow: 0 2px 10px #000; box-shadow: 0 15px 40px rgba(0,0,0,0.9); }
+.horror-detail-card.revealed { opacity: 1; transform: translateX(0); }
+
+/* Slide 6 Horrorthon Photo Gallery */
+.horror-photo-grid { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(1rem, 2vw, 2.5rem); width: 100%; margin-top: 1rem; perspective: 1000px; }
+.horror-photo-card { height: clamp(220px, 34vh, 380px); background: #08080a; border: 2px solid rgba(255, 42, 85, 0.6); border-radius: 20px; position: relative; overflow: hidden; display: flex; flex-direction: column; justify-content: flex-end; padding: clamp(1rem, 1.8vw, 2rem); box-shadow: 0 20px 50px rgba(255, 42, 85, 0.3), 0 20px 60px rgba(0,0,0,0.95); transition: all 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275); opacity: 0; transform: translateY(50px) scale(0.85); }
+.horror-photo-card.revealed { opacity: 1; transform: translateY(0) scale(1); }
+.horror-photo-card:hover { transform: translateY(-10px) scale(1.03) rotate(1deg); border-color: #ff2a55; box-shadow: 0 30px 70px rgba(255, 42, 85, 0.7); }
+.horror-photo-img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; filter: contrast(1.4) brightness(0.65) saturate(1.5) hue-rotate(-20deg); transition: filter 0.5s ease, transform 0.8s ease; }
+.horror-photo-card:hover .horror-photo-img { filter: contrast(1.2) brightness(0.85) saturate(1.8) hue-rotate(0deg); transform: scale(1.05); }
+.horror-photo-caption { position: relative; z-index: 3; font-family: 'Cinzel', serif; font-size: clamp(1rem, 1.6vw, 1.9rem); font-weight: 900; letter-spacing: 1.5px; color: #fff; text-shadow: 0 0 20px #ff2a55, 0 4px 20px #000; text-align: left; background: rgba(5, 0, 2, 0.9); padding: 0.6rem 1rem; border-radius: 12px; backdrop-filter: blur(10px); border: 1.5px solid rgba(255,42,85,0.5); word-break: break-word; }
+
+/* Slide 7 French Film Fest Editorial Spread */
+.french-editorial-layout { width: 100%; max-width: 1250px; display: grid; grid-template-columns: 1fr 1fr; gap: clamp(1.2rem, 2.5vw, 3rem); align-items: center; text-align: left; }
+.french-hero-text { font-family: 'Instrument Serif', serif; font-size: clamp(2.4rem, 4.8vw, 5.5rem); font-style: italic; color: #facc15; line-height: 0.95; text-shadow: 0 0 35px rgba(250, 204, 21, 0.5), 0 4px 20px #000; word-break: break-word; }
+.french-gold-tagline { font-size: clamp(0.85rem, 1.3vw, 1.3rem); font-weight: 800; letter-spacing: 1px; text-transform: uppercase; color: #fff; opacity: 0; transform: translateY(20px); transition: all 0.7s ease; margin-top: 0.8rem; line-height: 1.45; border-left: 3px solid #facc15; padding-left: 1rem; text-shadow: 0 2px 10px #000; word-break: break-word; }
+.french-gold-tagline.revealed { opacity: 1; transform: translateY(0); }
+
+.french-editorial-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.french-pillar-card { background: rgba(18, 15, 6, 0.85); border-top: 2px solid #facc15; border-left: 1px solid rgba(250,204,21,0.2); border-right: 1px solid rgba(250,204,21,0.2); border-bottom: 1px solid rgba(250,204,21,0.2); padding: 1rem 0.9rem; text-align: left; opacity: 0; transform: translateY(30px); transition: all 0.6s ease; backdrop-filter: blur(15px); box-shadow: 0 15px 35px rgba(0,0,0,0.8); }
+.french-pillar-card.revealed { opacity: 1; transform: translateY(0); }
+.french-pillar-num { font-family: 'Instrument Serif', serif; font-size: 1.5rem; color: #facc15; display: block; margin-bottom: 0.1rem; text-shadow: 0 0 10px rgba(250,204,21,0.4); }
+.french-pillar-title { font-size: clamp(0.8rem, 1vw, 1.05rem); font-weight: 800; letter-spacing: 0.5px; text-transform: uppercase; color: #fef08a; line-height: 1.3; text-shadow: 0 2px 8px #000; word-break: break-word; }
+
+/* Slide 8 Kinopolis Brutalists */
+.kino-brutalist-layout { width: 100%; max-width: 1250px; display: flex; flex-direction: column; align-items: flex-start; text-align: left; }
+.kino-title { font-family: 'Inter', sans-serif; font-size: clamp(2.8rem, 6vw, 6.5rem); font-weight: 900; letter-spacing: -2px; text-transform: uppercase; color: #38bdf8; text-shadow: 0 0 40px rgba(56, 189, 248, 0.6), 0 4px 20px #000; line-height: 0.9; word-break: break-word; }
+.kino-sub-tagline { font-family: 'Space Mono', monospace; font-size: clamp(0.85rem, 1.4vw, 1.5rem); font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #fff; background: #0284c7; padding: 0.3rem 1rem; margin-top: 0.8rem; opacity: 0; transform: translateX(-20px); transition: all 0.7s ease; display: inline-block; word-break: break-word; box-shadow: 0 10px 30px rgba(0,0,0,0.8); }
+.kino-sub-tagline.revealed { opacity: 1; transform: translateX(0); }
+
+.kino-grid-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.4rem; width: 100%; margin-top: 1.4rem; }
+.kino-detail-card { background: rgba(2, 20, 35, 0.92); border: 2.5px solid #38bdf8; padding: clamp(1rem, 1.8vw, 2rem); border-radius: 0px; font-size: clamp(0.95rem, 1.2vw, 1.3rem); font-weight: 700; letter-spacing: 1px; color: #e0f2fe; opacity: 0; transform: translateY(30px); transition: all 0.6s ease; backdrop-filter: blur(15px); box-shadow: 12px 12px 0px rgba(56, 189, 248, 0.25), 0 20px 40px rgba(0,0,0,0.9); line-height: 1.4; word-break: break-word; text-shadow: 0 2px 8px #000; }
+.kino-detail-card.revealed { opacity: 1; transform: translateY(0); }
+
+/* Slide 9 The Audience Sees */
+.audience-screen-stage { width: 100%; max-width: 1250px; height: auto; min-height: clamp(320px, 45vh, 500px); border-radius: 20px; border: 3px solid rgba(255, 255, 255, 0.45); position: relative; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between; padding: clamp(1.2rem, 2.5vw, 2.8rem); box-shadow: 0 30px 100px rgba(255, 255, 255, 0.15), 0 30px 100px rgba(0,0,0,0.95); background: radial-gradient(circle at center, rgba(30,30,40,0.95), rgba(5,5,8,0.99)); backdrop-filter: blur(20px); }
+.audience-title { font-family: 'Cinzel', serif; font-size: clamp(2.2rem, 4.5vw, 4.8rem); font-weight: 900; letter-spacing: -1px; text-transform: uppercase; color: #fff; text-shadow: 0 0 30px rgba(255, 255, 255, 0.8), 0 4px 20px rgba(0,0,0,0.95); position: relative; z-index: 4; margin-top: 0.2rem; word-break: break-word; }
+.audience-reveal-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: clamp(0.6rem, 1.2vw, 1.4rem); width: 100%; position: relative; z-index: 4; margin: 1rem 0; }
+.audience-card { background: rgba(255, 255, 255, 0.1); border: 1.5px solid rgba(255, 255, 255, 0.35); padding: clamp(1rem, 1.5vw, 1.8rem) 0.6rem; border-radius: 16px; font-family: 'Cinzel', serif; font-size: clamp(0.85rem, 1.2vw, 1.35rem); font-weight: 900; letter-spacing: 1px; text-transform: uppercase; color: #fff; text-shadow: 0 0 15px rgba(255,255,255,0.7), 0 2px 10px #000; opacity: 0; transform: translateY(40px) scale(0.85); transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); backdrop-filter: blur(15px); box-shadow: 0 15px 40px rgba(0,0,0,0.9); word-break: break-word; }
+.audience-card.revealed { opacity: 1; transform: translateY(0) scale(1); }
+
+/* Slide 10 BTS Top Banner Responsive Setup */
+.slide:nth-child(10) {
+  justify-content: flex-start !important;
+  padding-top: clamp(2rem, 4vh, 4rem);
+}
+.bts-header-stage { 
+  position: relative; 
+  margin: 0 auto;
+  z-index: 10; 
+  background: rgba(10, 15, 25, 0.92); 
+  border: 1.5px solid rgba(255, 255, 255, 0.4); 
+  padding: clamp(0.6rem, 1.2vw, 1.2rem) clamp(1.2rem, 3vw, 3.2rem); 
+  border-radius: 60px; 
+  backdrop-filter: blur(25px); 
+  box-shadow: 0 20px 60px rgba(0,0,0,0.95), 0 0 40px rgba(56, 189, 248, 0.35); 
+  max-width: 92vw; 
+  text-align: center;
+}
+.bts-header-title { 
+  font-family: 'Cinzel', serif; 
+  font-size: clamp(1.1rem, 2.2vw, 2.6rem); 
+  font-weight: 900; 
+  letter-spacing: 1.5px; 
+  text-transform: uppercase; 
+  color: #ffffff; 
+  text-shadow: 0 0 25px rgba(255, 255, 255, 0.9), 0 4px 15px #000; 
+  word-break: break-word; 
+  margin: 0;
+}
+
+/* Slide 11 Success Stage */
+.success-stage { width: 100%; max-width: 1250px; height: auto; min-height: clamp(380px, 48vh, 520px); border-radius: 24px; border: 3px solid rgba(34, 197, 94, 0.55); position: relative; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between; padding: clamp(1.2rem, 2.5vw, 2.8rem); box-shadow: 0 30px 90px rgba(34, 197, 94, 0.25), 0 30px 100px rgba(0,0,0,0.95); background: radial-gradient(circle at center, #022310 0%, #010d06 80%, #000 100%); }
+.success-title { font-family: 'Cinzel', serif; font-size: clamp(2rem, 4vw, 4rem); font-weight: 900; letter-spacing: -1px; text-transform: uppercase; color: #4ade80; text-shadow: 0 0 30px rgba(74, 222, 128, 0.8), 0 4px 20px #000; line-height: 0.95; position: relative; z-index: 4; word-break: break-word; }
+.success-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: clamp(0.5rem, 0.8vw, 1rem); width: 100%; position: relative; z-index: 4; margin: 0.8rem 0; }
+.success-card { background: rgba(4, 30, 15, 0.92); border: 1.5px solid rgba(74, 222, 128, 0.5); padding: clamp(0.8rem, 1.2vw, 1.3rem) 0.5rem; border-radius: 16px; backdrop-filter: blur(15px); box-shadow: 0 15px 35px rgba(0,0,0,0.9); opacity: 0; transform: translateY(30px) scale(0.85); transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); display: flex; flex-direction: column; justify-content: center; align-items: center; }
+.success-card.revealed { opacity: 1; transform: translateY(0) scale(1); }
+.success-card h3 { font-family: 'Cinzel', serif; font-size: clamp(0.8rem, 1.1vw, 1.2rem); font-weight: 900; color: #fff; text-shadow: 0 0 15px rgba(74, 222, 128, 0.7), 0 2px 8px #000; margin-bottom: 0.2rem; word-break: break-word; }
+.success-card p { font-size: clamp(0.65rem, 0.8vw, 0.8rem); color: #a7f3d0; line-height: 1.2; font-weight: 700; margin: 0; word-break: break-word; text-shadow: 0 1px 5px #000; }
+.success-master-goal { background: rgba(2, 20, 10, 0.95); border: 2px solid rgba(74, 222, 128, 0.7); padding: 0.9rem 1.6rem; border-radius: 50px; font-size: clamp(0.8rem, 1.2vw, 1.2rem); font-weight: 800; letter-spacing: 0.5px; color: #ffffff; text-shadow: 0 0 20px rgba(74, 222, 128, 0.8), 0 2px 10px #000; opacity: 0; transform: translateY(20px); transition: all 0.8s ease; position: relative; z-index: 4; backdrop-filter: blur(20px); box-shadow: 0 15px 50px rgba(34, 197, 94, 0.35); max-width: 1100px; margin: 0 auto; word-break: break-word; }
+.success-master-goal.revealed { opacity: 1; transform: translateY(0); }
+
+/* Slide 12 Final Timeline Wrap-up Stage */
+.final-wrap-stage {
+  width: 100%; max-width: 1250px; height: auto; min-height: clamp(380px, 48vh, 520px); 
+  border-radius: 24px; border: 3px solid rgba(255, 255, 255, 0.45); position: relative; overflow: hidden; 
+  display: flex; flex-direction: column; justify-content: space-between; padding: clamp(1.2rem, 2.5vw, 2.8rem); 
+  box-shadow: 0 30px 100px rgba(255, 255, 255, 0.15), 0 30px 100px rgba(0,0,0,0.95); 
+  background: radial-gradient(circle at center, rgba(30,30,40,0.95), rgba(5,5,8,0.99)); backdrop-filter: blur(20px);
+}
+.final-title { font-family: 'Cinzel', serif; font-size: clamp(2.5rem, 5vw, 4.8rem); font-weight: 900; letter-spacing: -1px; text-transform: uppercase; color: #fff; text-shadow: 0 0 30px rgba(255, 255, 255, 0.8), 0 4px 20px #000; position: relative; z-index: 4; margin-top: 0.2rem; word-break: break-word; }
+.final-timeline-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: clamp(0.6rem, 1vw, 1.2rem); width: 100%; position: relative; z-index: 4; margin: 0.8rem 0; }
+.final-timeline-card { background: rgba(255, 255, 255, 0.08); border: 1.5px solid rgba(255, 255, 255, 0.3); padding: 1rem 0.6rem; border-radius: 16px; backdrop-filter: blur(15px); opacity: 0; transform: translateY(30px) scale(0.85); transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); text-align: center; box-shadow: 0 15px 35px rgba(0,0,0,0.8); }
+.final-timeline-card.revealed { opacity: 1; transform: translateY(0) scale(1); }
+.final-month { font-size: 0.75rem; font-weight: 900; letter-spacing: 2px; text-transform: uppercase; color: #ffffff; margin-bottom: 0.2rem; text-shadow: 0 2px 8px #000; }
+.final-fest-name { font-family: 'Cinzel', serif; font-size: clamp(0.85rem, 1.2vw, 1.35rem); font-weight: 900; text-transform: uppercase; color: #fff; word-break: break-word; line-height: 1.15; text-shadow: 0 2px 10px #000; }
+
+.final-summary-card { background: rgba(255, 255, 255, 0.1); border: 1.5px solid rgba(255, 255, 255, 0.35); padding: 0.8rem 1.5rem; border-radius: 40px; font-size: clamp(0.85rem, 1.2vw, 1.25rem); font-weight: 800; letter-spacing: 1px; text-transform: uppercase; color: #ffffff; opacity: 0; transform: translateY(20px); transition: all 0.6s ease; position: relative; z-index: 4; backdrop-filter: blur(15px); word-break: break-word; text-shadow: 0 2px 10px #000; box-shadow: 0 15px 40px rgba(0,0,0,0.8); }
+.final-summary-card.revealed { opacity: 1; transform: translateY(0); }
+.final-thankyou-banner { font-family: 'Cinzel', serif; font-size: clamp(1.2rem, 2.2vw, 2.4rem); font-weight: 900; letter-spacing: 2px; text-transform: uppercase; color: #facc15; text-shadow: 0 0 30px rgba(250, 204, 21, 0.8), 0 4px 20px #000; opacity: 0; transform: scale(0.9); transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275); position: relative; z-index: 4; word-break: break-word; margin-top: 0.5rem; }
+.final-thankyou-banner.revealed { opacity: 1; transform: scale(1); }
+
+.badge { display: inline-block; background: rgba(255,255,255,0.1); border: 1.5px solid rgba(255,255,255,0.3); padding: 0.4rem 1.2rem; border-radius: 50px; text-transform: uppercase; letter-spacing: 2px; font-size: clamp(0.65rem, 0.8vw, 0.8rem); font-weight: 800; color: #ffffff; margin-bottom: 0.6rem; backdrop-filter: blur(10px); text-shadow: 0 2px 8px #000; }
+h1 { font-family: 'Cinzel', serif; font-size: clamp(2.2rem, 4.8vw, 5.5rem); font-weight: 900; letter-spacing: -1px; text-transform: uppercase; line-height: 0.95; margin-bottom: 0.6rem; text-shadow: 0 10px 40px rgba(0,0,0,0.95); }
+
+.nav-controls { position: absolute; bottom: clamp(0.8rem, 2vh, 2.5rem); right: clamp(0.8rem, 2vw, 2.5rem); z-index: 10; display: flex; gap: 1rem; }
+.btn { background: rgba(255,255,255,0.12); border: 1.5px solid rgba(255,255,255,0.35); color: white; padding: clamp(0.5rem, 1vh, 0.85rem) clamp(1rem, 1.8vw, 2rem); border-radius: 40px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; font-size: clamp(0.65rem, 0.9vw, 0.8rem); cursor: pointer; transition: all 0.3s ease; backdrop-filter: blur(10px); box-shadow: 0 10px 25px rgba(0,0,0,0.8); }
+.btn:hover { background: rgba(255,255,255,0.35); transform: translateY(-2px); }
+
+/* ==========================================================================
+   RESPONSIVE BREAKPOINTS (IPAD, TABLET & MOBILE VIEWPORTS)
+   ========================================================================== */
+
+/* IPAD & TABLET VIEWPORTS (up to 1024px) */
+@media screen and (max-width: 1024px) {
+  .poster-grid { grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+  .cinema-poster { aspect-ratio: 16 / 9; }
+  .filmstrip-row { grid-template-columns: 1fr; gap: 0.8rem; }
+  .horror-split-layout { grid-template-columns: 1fr; gap: 1.2rem; }
+  .horror-hero-title { white-space: normal; text-align: center; }
+  .horror-split-layout > div { text-align: center; }
+  .french-editorial-layout { grid-template-columns: 1fr; gap: 1.2rem; text-align: center; }
+  .french-gold-tagline { border-left: none; border-top: 2px solid #facc15; padding-left: 0; padding-top: 0.8rem; }
+  .kino-grid-row { grid-template-columns: 1fr; gap: 1rem; }
+  .audience-reveal-grid { grid-template-columns: repeat(2, 1fr); gap: 0.8rem; }
+  .success-grid { grid-template-columns: repeat(2, 1fr); gap: 0.8rem; }
+  .final-timeline-grid { grid-template-columns: repeat(2, 1fr); gap: 0.8rem; }
+}
+
+/* MOBILE PHONE VIEWPORTS (up to 600px) */
+@media screen and (max-width: 600px) {
+  .overlay { padding: 0.8rem; }
+  .poster-grid { grid-template-columns: 1fr; gap: 0.8rem; }
+  .cinema-poster { aspect-ratio: auto; min-height: 180px; }
+  .metrics-grid { grid-template-columns: 1fr; gap: 0.8rem; }
+  .french-editorial-grid { grid-template-columns: 1fr; gap: 0.8rem; }
+  .horror-photo-grid { grid-template-columns: 1fr; gap: 1rem; }
+  .audience-reveal-grid { grid-template-columns: 1fr; gap: 0.8rem; }
+  .success-grid { grid-template-columns: 1fr; gap: 0.8rem; }
+  .final-timeline-grid { grid-template-columns: 1fr; gap: 0.8rem; }
+  .nav-controls { bottom: 0.8rem; right: 0.8rem; }
+  .bts-header-stage { padding: 0.6rem 1.2rem; border-radius: 30px; }
+}
